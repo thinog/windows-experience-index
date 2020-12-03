@@ -1,0 +1,32 @@
+{
+  "name": "windows-experience-index",
+  "version": "0.1.0",
+  "description": "Windows Experience Index",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thinog/windows-experience-index.git"
+  },
+  "keywords": [
+    "electronjs",
+    "nodejs",
+    "windows",
+    "desktop-application"
+  ],
+  "author": "Thiago Martins",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thinog/windows-experience-index/issues"
+  },
+  "homepage": "https://github.com/thinog/windows-experience-index#readme",
+  "devDependencies": {
+    "electron": "^11.0.3"
+  }
+}
