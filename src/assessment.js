@@ -11,9 +11,7 @@ async function runAssessmentTool() {
         winsat.stderr.on('data', (data) => reject(data));
 
         winsat.on('close', async (code) => {
-            console.log(`Returned code: ${code}`);
-            const score = await getExperienceIndex();
-            return resolve(score);
+            return resolve(code);
         });
     });
 }
@@ -61,8 +59,6 @@ async function mapWinsatToExperienceIndex(winsatOutput) {
         experience[fieldKey] = parseFloat(value.replace(',', '.'));
     });
 
-    experience['assessmentDate'] = await getAssessmentDate();
-
     console.log(experience);
 
     return experience;
@@ -90,5 +86,6 @@ async function getAssessmentDate() {
     });
 }
 
-exports.getExperienceIndex = getExperienceIndex;
 exports.runAssessmentTool = runAssessmentTool;
+exports.getExperienceIndex = getExperienceIndex;
+exports.getAssessmentDate = getAssessmentDate;

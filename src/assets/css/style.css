@@ -1,0 +1,136 @@
+:root {
+    --header-height: 2.5em;
+}
+
+body {
+    
+}
+
+.title {
+    font-size: 1.5em;
+    font-weight: bold;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.wrapper {
+    padding: 5vh 5vw;
+}
+
+.table-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: solid 1px rgb(200, 200, 200);
+    border-bottom: solid 1px rgb(200, 200, 200);
+}
+
+.table {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    /* padding: 10px; */
+}
+
+.table .table-base-score {
+    background-color: #dadada;
+}
+
+.table-row { 
+    display: flex;
+    width: 100%;
+}
+
+.table-row .table-header {
+    font-weight: bold;
+    font-size: 1.1em;
+    border-bottom: solid 2px rgb(200, 200, 200);
+}
+
+.table-row .table-header div{
+    display: flex;
+    align-items: center;
+    min-height: var(--header-height) !important;
+}
+
+.table-options .table-row {
+    justify-content: space-between;
+}
+
+.table-sub-score .table-row div {
+    min-height: 2em;
+    display: flex;
+    align-items: center;
+}
+
+.component-column {
+    width: 35%;
+    font-weight: bold;
+}
+
+.description-column {
+    width: 55%;
+}
+
+.score-column {
+    width: 10%;
+    justify-content: center;
+}
+
+.base-score-column-header {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.base-score-column {
+    text-align: center;
+}
+
+.base-score-column {    
+    height: calc(100% -  var(--header-height));
+    display: flex;
+    flex-wrap: wrap;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-content: space-around;
+    flex-grow: 1;
+}
+
+.base-score {    
+    display: flex;
+}
+
+.base-score div {  
+    align-self: center;  
+    font-size: 4em;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px 15px;
+    border-radius: 25%;
+    text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4); 
+    color: rgb(248, 248, 248);
+    background: rgb(76,114,154);
+    background: linear-gradient(45deg, rgba(76,114,154,1) 15%, rgba(26,125,182,1) 35%, rgba(0,212,255,1) 100%);
+}
+
+.base-score-description {
+    font-size: 1em;
+    text-align: center;
+}
+
+.assessment-date {
+    display: flex;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+}
+
+.run-button {
+    display: flex;
+}
+
+.run-button img {
+    height: 1em;
+    padding-left: 5px;
+    padding-right: 5px;
+}

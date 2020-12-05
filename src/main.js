@@ -5,8 +5,10 @@ let win;
 
 async function createWindow() {
     win = new BrowserWindow({
-        width: 800,
+        width: 1200,
         height: 600,
+        center: true,
+        resizable: false,
         icon: `${__dirname}/assets/img/icon.ico`,
         webPreferences: {
             nodeIntegration: true,
@@ -18,14 +20,14 @@ async function createWindow() {
     win.loadFile(`${__dirname}/index.html`);
 }
 
-async function init(){
-    const score = await assessment.getExperienceIndex();
-    win.webContents.send('initial-score', score);
+async function notifyAssessmentData(){
+    win.webContents.send('initial-score', await assessment.getExperienceIndex());
+    win.webContents.send('last-run-date', await assessment.getAssessmentDate());
 }
 
 app.whenReady()
     .then(createWindow)
-    .then(init);
+    .then(notifyAssessmentData);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -40,6 +42,6 @@ app.on('activate', async () => {
 });
 
 ipcMain.on('run-assessment', async (event) => {
-    const score = await assessment.runAssessmentTool();
-    event.reply('assessment-done', score);
+    await assessment.runAssessmentTool();
+    await notifyAssessmentData();
 });
