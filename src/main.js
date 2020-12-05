@@ -1,21 +1,31 @@
-const { app, BrowserWindow } = require('electron');
-const { spawn } = require('child_process');
+const { app, ipcMain, BrowserWindow } = require('electron');
+const assessment = require('./assessment');
+
+let win;
 
 async function createWindow() {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 800,
         height: 600,
+        icon: `${__dirname}/assets/img/icon.ico`,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            devTools: true
         }
     });
 
-    win.loadFile(`${__dirname}/views/index.html`);
-
-    await runAssessmentTool();
+    // win.removeMenu();
+    win.loadFile(`${__dirname}/index.html`);
 }
 
-app.whenReady().then(createWindow);
+async function init(){
+    const score = await assessment.getExperienceIndex();
+    win.webContents.send('initial-score', score);
+}
+
+app.whenReady()
+    .then(createWindow)
+    .then(init);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -23,94 +33,13 @@ app.on('window-all-closed', () => {
     }
 });
 
-app.on('activate', () => {
+app.on('activate', async () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
+        createWindow();
     }
 });
 
-async function runAssessmentTool() {
-    return new Promise(async (resolve, reject) => {
-        const winsat = spawn(
-            'Start-Process', 
-            ['WinSAT', '-ArgumentList', 'd3d', '-Verb', 'RunAs', '-Wait'],
-            { shell: 'powershell.exe', windowsHide: true });
-
-        winsat.stderr.on('data', (data) => reject(data));
-
-        winsat.on('close', async (code) => {
-            console.log(`Returned code: ${code}`);
-            const pcScore = await getExperienceIndex();
-            return resolve(pcScore);
-        });
-    });
-}
-
-async function getExperienceIndex() {
-    return new Promise((resolve, reject) => {
-        let output = "";
-        const wei = spawn(
-            'Get-WmiObject', 
-            ['-class', 'Win32_WinSAT'], 
-            { shell: 'powershell.exe', windowsHide: true });
-
-        wei.stderr.on('data', (data) => reject(data));
-
-        wei.stdout.on('data', (data) => output += data.toString());
-
-        wei.on('close', async (code) => {
-            const experience = await mapWinsatToExperienceIndex(output);
-            return resolve(experience);
-        });
-    });
-}
-
-async function mapWinsatToExperienceIndex(winsatOutput){    
-    const fields = {
-        'CPUScore': 'cpu',
-        'D3DScore': 'direct3d',
-        'DiskScore': 'disk',
-        'GraphicsScore': 'graphics',
-        'MemoryScore': 'memory',
-        'WinSPRLevel': 'score'
-    };
-
-    const outputLines = winsatOutput.split('\r\n');
-    const properties = outputLines.filter(item => item.split(':')[0].trim() in fields);
-    
-    console.log(properties);
-    
-    const experience = {};
-
-    properties.map(item => {
-        const fieldKey = fields[item.split(':')[0].trim()];
-        const value = item.split(':')[1].trim();
-
-        experience[fieldKey] = parseFloat(value.replace(',','.'));
-    });
-
-    experience['assessmentDate'] = await getAssessmentDate();
-
-    console.log(experience);
-
-    return experience;
-}
-
-async function getAssessmentDate(){
-    return new Promise((resolve, reject) => {
-        let output = "";
-        const wei = spawn(
-            '(gci -recurse c:\\windows\\performance\\winsat\\datastore | select @{name="lastwritetime"; expression={$_.lastwritetime.tostring("yyyy-MM-ddTHH:mmZ")}})[0]', 
-            [], 
-            { shell: 'powershell.exe', windowsHide: true });
-
-        wei.stderr.on('data', (data) => reject(data));
-
-        wei.stdout.on('data', (data) => output += data.toString());
-
-        wei.on('close', (code) => {
-            const date = new Date(output.trim().split('\r\n').pop());
-            return resolve(date);
-        });
-    });    
-}
+ipcMain.on('run-assessment', async (event) => {
+    const score = await assessment.runAssessmentTool();
+    event.reply('assessment-done', score);
+});

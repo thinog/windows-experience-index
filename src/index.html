@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Windows Experience Index</title>
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+	</head>
+	<body>
+		<select id="language">
+			<option value="pt">Português</option>
+			<option value="es">Español</option>
+			<option value="en">English</option>
+		</select>
+
+		<h1 data-translation-key="mainTitle"></h1>
+		<span data-translation-key="mainDescription"></span>
+
+		<table border="1">
+			<thead>
+				<th data-translation-key="header.component"></th>
+				<th data-translation-key="header.description"></th>
+				<th data-translation-key="header.subscore"></th>
+				<th data-translation-key="header.baseScore"></th>
+			</thead>
+			<tbody>
+				<tr align="center">
+					<td colspan="3"></td>
+					<td rowspan="6">
+						<h1 id="base-score" data-score="base"></h1>
+						<div data-translation-key="score.base.description"></div>
+					</td>
+				</tr>
+
+				<tr>
+					<td data-translation-key="score.processor.component"></td>
+					<td data-translation-key="score.processor.description"></td>
+					<td id="cpu-score" data-score="cpu"></td>
+					<td rowspan="0"></td>
+				</tr>
+
+				<tr>
+					<td data-translation-key="score.memory.component"></td>
+					<td data-translation-key="score.memory.description"></td>
+					<td id="memory-score" data-score="memory"></td>
+					<td rowspan="0"></td>
+				</tr>
+
+				<tr>
+					<td data-translation-key="score.graphics.component"></td>
+					<td data-translation-key="score.graphics.description"></td>
+					<td id="graphics-score" data-score="graphics"></td>
+					<td rowspan="0"></td>
+				</tr>
+
+				<tr>
+					<td data-translation-key="score.gaming.component"></td>
+					<td data-translation-key="score.gaming.description"></td>
+					<td id="gaming-score" data-score="gaming"></td>
+					<td rowspan="0"></td>
+				</tr>
+
+				<tr>
+					<td data-translation-key="score.disk.component"></td>
+					<td data-translation-key="score.disk.description"></td>
+					<td id="disk-score" data-score="disk"></td>
+					<td rowspan="0"></td>
+				</tr>
+			</tbody>
+		</table>
+
+        <div><span data-translation-key="lastUpdate"></span>: <span id="assessment-date" data-score="assessmentDate"></span></div>
+        
+        <br />
+
+		<button onclick="callAssessment()" data-translation-key="runAssessment"></button>
+
+		<script src="renderer.js"></script>
+	</body>
+</html>
