@@ -3,7 +3,7 @@ exports.translations = {
     mainDescription: 'The Windows Experience Index assesses key system components on a scale of 1.0 to 9.9',
     lastUpdate: 'Last score update',
     runAssessment: 'Re-run the assessment',
-    footer: "Powered by",
+    poweredBy: "Powered by",
     language: "Language",
 
     score: {
