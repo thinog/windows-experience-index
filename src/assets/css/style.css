@@ -1,16 +1,78 @@
 :root {
     --header-height: 2.5em;
+    --table-border-color: rgb(200, 200, 200);
+}
+
+@font-face {
+    font-family: ubuntu;
+    src: url('../fonts/Ubuntu-Regular.ttf'), 
+        url('../fonts/Ubuntu-Bold.ttf');
 }
 
 body {
-    
+    font-family: ubuntu, sans-serif;
+    background-color: rgb(250, 250, 250);
+    color: rgb(80, 80, 80);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.dark {
+    background-color: rgb(48, 48, 48);
+    color: rgb(190, 190, 190);
+}
+
+.app-headers {
+    display: flex;
+    width: 100%;
+}
+
+.app-description {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.app-settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-content: center;
+    align-items: center;
+}
+
+.theme {
+    padding: 10px 10px;
+    margin-bottom: 10px;
+    transition: background 0.5s;
+    cursor: pointer;
+}
+
+.theme:hover {
+    background-color: rgb(200, 200, 200);
+    transition: background 0.5s;
+}
+
+.theme:active {
+    background-color: rgb(150, 150, 150);
+    transition: background 0.5s;
+}
+
+.theme img {
+    width: 2em;
+    content: url('../img/moon.svg');
+}
+
+.dark .theme img {    
+    content: url('../img/sun.svg');
+    filter: invert(100%);
 }
 
 .title {
     font-size: 1.5em;
     font-weight: bold;
-    padding-top: 20px;
-    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .wrapper {
@@ -19,11 +81,8 @@ body {
 
 .table-wrapper {
     width: 100%;
-    max-width: 1000px;
     padding-top: 20px;
     padding-bottom: 20px;
-    border-top: solid 1px rgb(200, 200, 200);
-    border-bottom: solid 1px rgb(200, 200, 200);
 }
 
 .table {
@@ -31,10 +90,12 @@ body {
     flex-wrap: wrap;
     justify-content: space-between;
     /* padding: 10px; */
+    overflow: hidden;
 }
 
-.table .table-base-score {
-    background-color: #dadada;
+.table-borders {
+    border-top: solid 2px var(--table-border-color);
+    border-bottom: solid 2px var(--table-border-color);
 }
 
 .table-row { 
@@ -45,7 +106,7 @@ body {
 .table-row .table-header {
     font-weight: bold;
     font-size: 1.1em;
-    border-bottom: solid 2px rgb(200, 200, 200);
+    border-bottom: solid 2px var(--table-border-color);
 }
 
 .table-row .table-header div{
@@ -56,16 +117,17 @@ body {
 
 .table-options .table-row {
     justify-content: space-between;
+    align-items: center;
 }
 
 .table-sub-score .table-row div {
-    min-height: 2em;
+    min-height: 2.5em;
     display: flex;
     align-items: center;
 }
 
 .component-column {
-    width: 35%;
+    width: 30%;
     font-weight: bold;
 }
 
@@ -74,7 +136,7 @@ body {
 }
 
 .score-column {
-    width: 10%;
+    width: 15%;
     justify-content: center;
 }
 
@@ -88,10 +150,10 @@ body {
 }
 
 .base-score-column {    
+    background-color: rgb(230, 230, 230);
     height: calc(100% -  var(--header-height));
     display: flex;
     flex-wrap: wrap;
-    /* flex-direction: column; */
     justify-content: center;
     align-content: space-around;
     flex-grow: 1;
@@ -102,21 +164,32 @@ body {
 }
 
 .base-score div {  
-    align-self: center;  
+    display: flex;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
     font-size: 4em;
     font-weight: bold;
     text-align: center;
-    padding: 15px 15px;
-    border-radius: 25%;
-    text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.4); 
-    color: rgb(248, 248, 248);
-    background: rgb(76,114,154);
-    background: linear-gradient(45deg, rgba(76,114,154,1) 15%, rgba(26,125,182,1) 35%, rgba(0,212,255,1) 100%);
+    /* padding: 15px 15px; */
+    width: 1.8em;
+    height: 1.8em;
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.4); 
+    color: rgb(250, 250, 250);
+    
+    background-color: rgb(76,114,154);
+    
+    background: linear-gradient(
+        45deg, 
+        rgb(76,114,154) 15%, 
+        rgb(26,125,182) 35%, 
+        rgb(0,212,255) 100%);
 }
 
 .base-score-description {
-    font-size: 1em;
+    font-size: 0.8em;
     text-align: center;
+    padding: 0 10px 5px;
 }
 
 .assessment-date {
@@ -125,12 +198,43 @@ body {
     /* flex-wrap: wrap; */
 }
 
+#assessment-date {    
+    padding-top: 10px;
+    font-weight: bold;
+}
+
 .run-button {
     display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 0;
+    border: solid 1px var(--table-border-colors);    
+    background-color: rgb(230, 230, 230);
+    transition: background 0.5s;
+}
+
+.run-button:hover {
+    background: rgb(200, 200, 200);
+    transition: background 0.5s;
+}
+
+.run-button:active {
+    background: rgb(150, 150, 150);
+    transition: background 0.5s;
 }
 
 .run-button img {
-    height: 1em;
+    height: 1.1em;
     padding-left: 5px;
     padding-right: 5px;
+    margin: 10px 0 10px;
+}
+
+.footer {
+    position: absolute;
+    width: 100%;
+    bottom: 1em;
+    left: 0;
+    display: flex;
+    justify-content: center;
 }

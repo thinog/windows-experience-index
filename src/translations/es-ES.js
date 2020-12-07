@@ -3,6 +3,8 @@ exports.translations = {
     mainDescription: 'La Evaluación de la Experiencia en Windows evalúa componentes clave del sistema según una escala que va desde 1,0 hasta 9,9',
     lastUpdate: 'Última actualización de puntuación',
     runAssessment: 'Volver a evaluar',
+    poweredBy: "Aplicación provista por",
+    language: "Idioma",
 
     score: {
         processor: {

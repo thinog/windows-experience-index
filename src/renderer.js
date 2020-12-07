@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
 const runButton = document.getElementById('run');
 runButton.addEventListener('click', callAssessment);
 
+const themeButton = document.getElementById('theme');
+themeButton.addEventListener('click', changeTheme);
+
 function callAssessment(){
     loadingScore = true;
     ipcRenderer.send('run-assessment');
@@ -57,6 +60,14 @@ function translate(lang){
 
     fillScore(lastScore);
     fillAssessmentDate(lastAssessmentDate);
+}
+
+function changeTheme(event){    
+    if(document.body.classList.contains('dark')){
+        document.body.classList.remove('dark');
+    } else {
+        document.body.classList.add('dark');
+    }
 }
 
 ipcRenderer.on('assessment-done', (event, score) => {

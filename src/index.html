@@ -8,17 +8,30 @@
 	</head>
 	<body>
 		<div class="wrapper">
-			<select id="language">
-				<option value="pt-BR">Português</option>
-				<option value="es-ES">Español</option>
-				<option value="en-US">English</option>
-			</select>
+			<div class="app-headers">
+				<div class="app-description">
+					<div class="title" data-translation-key="mainTitle"></div>
+					<span data-translation-key="mainDescription"></span>
+				</div>
 
-			<div class="title" data-translation-key="mainTitle"></div>
-			<span data-translation-key="mainDescription"></span>
+				<div class="app-settings">
+                    <div id="theme" class="theme">
+                        <!-- Icons made by Flat Icon (https://www.flaticon.com/packs/weather-78) -->
+                        <img src="./assets/img/moon.svg" />
+                    </div>
+
+					<div class="language">
+						<select id="language">
+							<option value="pt-BR">Português</option>
+							<option value="es-ES">Español</option>
+							<option value="en-US">English</option>
+						</select>
+                    </div>
+				</div>
+			</div>
 
 			<div class="table-wrapper">
-				<div class="table">
+				<div class="table table-borders">
 					<div class="table-row">
 						<div class="table table-sub-score">
 							<div class="table-row table-header">
@@ -78,18 +91,21 @@
 			<div class="table table-options">
 				<div class="table-row">
 					<div class="assessment-date">
-						<div data-translation-key="lastUpdate"></div>
-						<div id="assessment-date"></div>
+						<span data-translation-key="lastUpdate"></span>
+						<span id="assessment-date"></span>
 					</div>
 
 					<div>
 						<button id="run" class="run-button">
-							<img src="./assets/img/admin-privilege.svg" />
+                            <!-- Icon made by Flat Icon (https://www.flaticon.com/free-icon/shield_566112) -->
+							<img src="./assets/img/shield.svg" />
 							<div data-translation-key="runAssessment"></div>
 						</button>
 					</div>
 				</div>
 			</div>
+
+			<footer class="footer"><span data-translation-key="poweredBy"></span> <a href="https://github.com/thinog">Thinog</a></footer>
 		</div>
 
 		<script src="renderer.js"></script>

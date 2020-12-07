@@ -16,6 +16,7 @@ async function createWindow() {
         }
     });
 
+    win.setBackgroundColor('#56cc5b10')
     // win.removeMenu();
     win.loadFile(`${__dirname}/index.html`);
 }

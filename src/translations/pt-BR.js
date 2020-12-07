@@ -3,6 +3,8 @@ exports.translations = {
     mainDescription: 'O Índice de Experiência do Windows avalia os principais componentes do sistema em uma escala de 1,0 a 9,9',
     lastUpdate: 'Última atualização de pontuação',
     runAssessment: 'Reexecutar a avaliação',
+    poweredBy: "Criado por",
+    language: "Idioma",
 
     score: {
         processor: {
