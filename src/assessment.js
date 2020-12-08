@@ -5,7 +5,7 @@ async function runAssessmentTool() {
     return new Promise(async (resolve, reject) => {
         const winsat = spawn(
             'Start-Process',
-            ['WinSAT', '-ArgumentList', '"formal -restart"', '-Verb', 'RunAs', '-Wait'],
+            ['WinSAT', '-ArgumentList', '"mem"', '-Verb', 'RunAs', '-Wait'],
             { shell: 'powershell.exe', windowsHide: true });
 
         winsat.stderr.on('data', (data) => reject(data));

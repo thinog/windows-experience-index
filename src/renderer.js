@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, BrowserView } = require('electron');
 
 let locale = 'pt-BR';
 let loadingScore = false;
@@ -22,32 +22,50 @@ runButton.addEventListener('click', callAssessment);
 const themeButton = document.getElementById('theme');
 themeButton.addEventListener('click', changeTheme);
 
-function callAssessment(){
-    loadingScore = true;
+const minimize = document.getElementById('minimize');
+minimize.addEventListener('click', () => ipcRenderer.send('app-minimize'));
+
+const maximize = document.getElementById('maximize');
+maximize.addEventListener('click', () => ipcRenderer.send('app-maximize'));
+
+const close = document.getElementById('close');
+close.addEventListener('click', () => ipcRenderer.send('app-close'));
+
+const github = document.getElementById('github');
+github.addEventListener('click', (event) => {
+    event.preventDefault();
+    ipcRenderer.send('open-github')
+});
+
+function callAssessment() {
+    hideLoader(false);
     ipcRenderer.send('run-assessment');
 }
 
-function fillScore(score){
-    if(!score) return;
+function fillScore(score) {
+    if (!score) return;
 
     lastScore = score;
-    
+
     const elements = document.querySelectorAll('[data-score]');
 
     elements.forEach(element => {
-        element.innerHTML = score[element.dataset.score].toLocaleString(locale);
+        if (score['base'] === score[element.dataset.score]) {
+            element.classList.add('grey-column', 'bold');
+        }
+        element.innerHTML = score[element.dataset.score].toLocaleString(locale, { maximumFractionDigits: 1 });
     });
 }
 
 function fillAssessmentDate(date) {
-    if(!date) return;
+    if (!date) return;
 
     lastAssessmentDate = date;
     const element = document.getElementById('assessment-date');
     element.innerHTML = date.toLocaleString(locale);
 }
 
-function translate(lang){
+function translate(lang) {
     const elements = document.querySelectorAll('[data-translation-key]');
 
     const translation = require(`${__dirname}/translations/${lang}.js`).translations;
@@ -62,25 +80,35 @@ function translate(lang){
     fillAssessmentDate(lastAssessmentDate);
 }
 
-function changeTheme(event){    
-    if(document.body.classList.contains('dark')){
+function changeTheme(event) {
+    if (document.body.classList.contains('dark')) {
         document.body.classList.remove('dark');
     } else {
         document.body.classList.add('dark');
     }
 }
 
+function hideLoader(hide = true) {
+    const loader = document.getElementById('loader');
+    console.log(loader)
+
+    if (hide && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+    else loader.classList.remove('hidden');
+}
+
 ipcRenderer.on('assessment-done', (event, score) => {
     fillScore(score);
-    loadingScore = false;
+    hideLoader(true);
 });
 
-ipcRenderer.on('initial-score', (event, score) => {    
-    if(!score || score.baseScore == 0) {
+ipcRenderer.on('initial-score', (event, score) => {
+    if (!score || score.baseScore == 0) {
         // abrir modal de confirmação de primeiro calculo
     }
-    
+
     fillScore(score);
 });
 
-ipcRenderer.on('last-run-date', (event, date) => fillAssessmentDate(date));
+ipcRenderer.on('last-run-date', (event, date) => {
+    fillAssessmentDate(date)
+});

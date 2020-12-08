@@ -7,10 +7,23 @@
 		<link rel="stylesheet" href="./assets/css/style.css" />
 	</head>
 	<body>
+        <div class="title-bar">
+            <div class="title">
+                <img src="./assets/img/icon-32.ico" />
+                <span>Windows Experience Index</span>
+            </div>
+
+            <div class="action-buttons">
+                <div id="minimize"><img src="./assets/img/minimize.svg" /></div>
+                <div id="maximize" class="disabled"><img src="./assets/img/maximize.svg" /></div>
+                <div id="close"><img src="./assets/img/close.svg" /></div>
+            </div>
+        </div>
+
 		<div class="wrapper">
 			<div class="app-headers">
 				<div class="app-description">
-					<div class="title" data-translation-key="mainTitle"></div>
+					<div class="main-title" data-translation-key="mainTitle"></div>
 					<span data-translation-key="mainDescription"></span>
 				</div>
 
@@ -43,31 +56,31 @@
 							<div class="table-row">
 								<div class="component-column" data-translation-key="score.processor.component"></div>
 								<div class="description-column" data-translation-key="score.processor.description"></div>
-								<div class="score-column" data-score="cpu"></div>
+								<div class="score-column" data-score="cpu">0</div>
 							</div>
 
 							<div class="table-row">
 								<div class="component-column" data-translation-key="score.memory.component"></div>
 								<div class="description-column" data-translation-key="score.memory.description"></div>
-								<div class="score-column" data-score="memory"></div>
+								<div class="score-column" data-score="memory">0</div>
 							</div>
 
 							<div class="table-row">
 								<div class="component-column" data-translation-key="score.graphics.component"></div>
 								<div class="description-column" data-translation-key="score.graphics.description"></div>
-								<div class="score-column" data-score="graphics"></div>
+								<div class="score-column" data-score="graphics">0</div>
 							</div>
 
 							<div class="table-row">
 								<div class="component-column" data-translation-key="score.gaming.component"></div>
 								<div class="description-column" data-translation-key="score.gaming.description"></div>
-								<div class="score-column" data-score="gaming"></div>
+								<div class="score-column" data-score="gaming">0</div>
 							</div>
 
 							<div class="table-row">
 								<div class="component-column" data-translation-key="score.disk.component"></div>
 								<div class="description-column" data-translation-key="score.disk.description"></div>
-								<div class="score-column" data-score="disk"></div>
+								<div class="score-column" data-score="disk">0</div>
 							</div>
 						</div>
 
@@ -76,9 +89,9 @@
 								<div class="base-score-column-header" data-translation-key="header.baseScore" id="base-score"></div>
 							</div>
 
-							<div class="base-score-column">
+							<div class="base-score-column grey-column">
 								<div class="base-score">
-									<div data-score="base"></div>
+									<div data-score="base">0</div>
 								</div>
 
 								<div class="base-score-description" data-translation-key="score.base.description"></div>
@@ -95,17 +108,18 @@
 						<span id="assessment-date"></span>
 					</div>
 
-					<div>
-						<button id="run" class="run-button">
+					<div class="run-assessment">
+                        <div class="loader hidden" id="loader"></div>
+						<div id="run" class="run-button">
                             <!-- Icon made by Flat Icon (https://www.flaticon.com/free-icon/shield_566112) -->
 							<img src="./assets/img/shield.svg" />
 							<div data-translation-key="runAssessment"></div>
-						</button>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<footer class="footer"><span data-translation-key="poweredBy"></span> <a href="https://github.com/thinog">Thinog</a></footer>
+			<footer class="footer"><span data-translation-key="poweredBy"></span> <a id="github" href="#">Thinog</a></footer>
 		</div>
 
 		<script src="renderer.js"></script>
