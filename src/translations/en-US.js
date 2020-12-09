@@ -1,6 +1,6 @@
 exports.translations = {
     mainTitle: 'Rate and improve your computer\'s performance',
-    mainDescription: 'The Windows Experience Index assesses key system components on a scale of 1.0 to 9.9',
+    mainDescription: 'The Windows Experience Index assesses key system components on a scale of {from} to {to}',
     lastUpdate: 'Last score update',
     runAssessment: 'Re-run the assessment',
     poweredBy: "Powered by",

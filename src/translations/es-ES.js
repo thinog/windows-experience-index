@@ -1,6 +1,6 @@
 exports.translations = {
     mainTitle: 'Evaluar y mejorar el rendimiento del equipo',
-    mainDescription: 'La Evaluación de la Experiencia en Windows evalúa componentes clave del sistema según una escala que va desde 1,0 hasta 9,9',
+    mainDescription: 'La Evaluación de la Experiencia en Windows evalúa componentes clave del sistema según una escala que va desde {from} hasta {to}',
     lastUpdate: 'Última actualización de puntuación',
     runAssessment: 'Volver a evaluar',
     poweredBy: "Aplicación provista por",

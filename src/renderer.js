@@ -1,41 +1,32 @@
-const { ipcRenderer, BrowserView } = require('electron');
+const { ipcRenderer } = require('electron');
 
-let locale = 'pt-BR';
-let loadingScore = false;
+let locale;
 let lastScore;
 let lastAssessmentDate;
 
-const languageSelect = document.getElementById('language');
-languageSelect.addEventListener('change', (event) => {
-    locale = event.target.value;
-    translate(locale);
-});
+document.getElementById('run').addEventListener('click', callAssessment);
+document.getElementById('theme').addEventListener('click', changeTheme);
 
-document.addEventListener('DOMContentLoaded', () => {
-    languageSelect.value = locale;
-    translate(languageSelect.value);
-});
+document.getElementById('minimize').addEventListener('click', () => ipcRenderer.send('app-minimize'));
+document.getElementById('maximize').addEventListener('click', () => ipcRenderer.send('app-maximize'));
+document.getElementById('close').addEventListener('click', () => ipcRenderer.send('app-close'));
 
-const runButton = document.getElementById('run');
-runButton.addEventListener('click', callAssessment);
-
-const themeButton = document.getElementById('theme');
-themeButton.addEventListener('click', changeTheme);
-
-const minimize = document.getElementById('minimize');
-minimize.addEventListener('click', () => ipcRenderer.send('app-minimize'));
-
-const maximize = document.getElementById('maximize');
-maximize.addEventListener('click', () => ipcRenderer.send('app-maximize'));
-
-const close = document.getElementById('close');
-close.addEventListener('click', () => ipcRenderer.send('app-close'));
-
-const github = document.getElementById('github');
-github.addEventListener('click', (event) => {
+document.getElementById('github').addEventListener('click', (event) => {
     event.preventDefault();
     ipcRenderer.send('open-github')
 });
+
+function getLocale() {
+    if(locale) return locale;
+
+    const supportedLocales = ['en-US', 'pt-BR', 'es-ES'];
+    const defaultLocale = 'en-US';
+    const systemLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+
+    return supportedLocales.includes(systemLocale) 
+        ? systemLocale
+        : defaultLocale;
+};
 
 function callAssessment() {
     hideLoader(false);
@@ -53,7 +44,7 @@ function fillScore(score) {
         if (score['base'] === score[element.dataset.score]) {
             element.classList.add('grey-column', 'bold');
         }
-        element.innerHTML = score[element.dataset.score].toLocaleString(locale, { maximumFractionDigits: 1 });
+        element.innerHTML = score[element.dataset.score].toLocaleString(getLocale(), { maximumFractionDigits: 1 });
     });
 }
 
@@ -62,17 +53,22 @@ function fillAssessmentDate(date) {
 
     lastAssessmentDate = date;
     const element = document.getElementById('assessment-date');
-    element.innerHTML = date.toLocaleString(locale);
+    element.innerHTML = date.toLocaleString(getLocale());
 }
 
-function translate(lang) {
+function translate(language, args) {
     const elements = document.querySelectorAll('[data-translation-key]');
 
-    const translation = require(`${__dirname}/translations/${lang}.js`).translations;
+    const translation = require(`${__dirname}/translations/${language}.js`).translations;
 
     elements.forEach(element => {
         const key = element.dataset.translationKey;
-        const text = key.split('.').reduce((object, prop) => object && object[prop], translation);
+        let text = key.split('.').reduce((object, prop) => object && object[prop], translation);
+
+        if(args && args[key]) {
+            Object.keys(args[key]).forEach((objKey) => text = text.replace(`{${objKey}}`, args[key][objKey]));
+        }
+
         element.innerHTML = text;
     });
 
@@ -90,25 +86,35 @@ function changeTheme(event) {
 
 function hideLoader(hide = true) {
     const loader = document.getElementById('loader');
-    console.log(loader)
 
-    if (hide && !loader.classList.contains('hidden')) loader.classList.add('hidden');
-    else loader.classList.remove('hidden');
+    if (hide && !loader.classList.contains('hidden')) {
+        loader.classList.add('hidden');
+    } else if(!hide) {
+        loader.classList.remove('hidden');
+    }
 }
 
-ipcRenderer.on('assessment-done', (event, score) => {
-    fillScore(score);
-    hideLoader(true);
-});
 
-ipcRenderer.on('initial-score', (event, score) => {
+ipcRenderer.on('score', (event, score) => {
     if (!score || score.baseScore == 0) {
         // abrir modal de confirmação de primeiro calculo
     }
 
     fillScore(score);
+    hideLoader();
 });
 
-ipcRenderer.on('last-run-date', (event, date) => {
-    fillAssessmentDate(date)
+ipcRenderer.on('assessment-date', (event, date) => fillAssessmentDate(date));
+
+ipcRenderer.on('translation-args', (event, args) => {
+    const languageSelect = document.getElementById('language');
+    languageSelect.value = getLocale();
+
+    languageSelect.addEventListener('change', (event) => {
+        locale = event.target.value;
+        translate(locale, args);
+    });
+
+    translate(languageSelect.value, args);
+    document.getElementById('wrapper').classList.remove('hidden');
 });

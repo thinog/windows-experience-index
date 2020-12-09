@@ -1,4 +1,5 @@
 const { app, ipcMain, BrowserWindow, shell } = require('electron');
+const { spawn } = require('child_process');
 const assessment = require('./assessment');
 
 let win;
@@ -12,57 +13,80 @@ async function createWindow() {
         frame: false,
         icon: `${__dirname}/assets/img/icon-256.ico`,
         webPreferences: {
-            nodeIntegration: true,
-            devTools: true
+            nodeIntegration: true
         }
     });
-
+    win.webContents.openDevTools();
     win.removeMenu();
     win.loadFile(`${__dirname}/index.html`);
+
+    await loadTranslationArgs();
 }
 
-async function notifyAssessmentData(firstTime = false) {
-    if (firstTime) {
-        win.webContents.send('initial-score', await assessment.getExperienceIndex());
-    } else {
-        win.webContents.send('assessment-done', await assessment.getExperienceIndex());
-    }
-    win.webContents.send('last-run-date', await assessment.getAssessmentDate());
+async function loadTranslationArgs(){
+    const limits = await assessment.getScoreLimits();
+
+    Object.keys(limits).forEach(objKey => {
+        limits[objKey] = limits[objKey].toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale, { 
+            minimumFractionDigits: 1, 
+            maximumFractionDigits: 1 
+        });
+    });
+    
+    const args = {
+        'mainDescription': limits
+    };    
+
+    win.webContents.send('translation-args', args);
+}
+
+async function notifyScore() {
+    win.webContents.send('score', await assessment.getExperienceIndex());
+    win.webContents.send('assessment-date', await assessment.getAssessmentDate());
+}
+
+async function getSystemLocale() {
+    return new Promise((resolve, reject) => {
+        let output = "";
+        const wei = spawn(
+            '(Get-UICulture | ForEach-Object -MemberName Name)',
+            [],
+            { shell: 'powershell.exe', windowsHide: true });
+
+        wei.stderr.on('data', (data) => reject(data));
+
+        wei.stdout.on('data', (data) => output += data.toString());
+
+        wei.on('close', async (code) => {
+            resolve(output);
+        });
+    });
 }
 
 app.whenReady()
     .then(createWindow)
-    .then(() => notifyAssessmentData(true));
+    .then(notifyScore);
 
-app.on('window-all-closed', () => {
-    app.quit();
-});
+app.on('window-all-closed', app.quit);
 
-app.on('activate', async () => {
+app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }
 });
 
-ipcMain.on('run-assessment', async (event) => {
+ipcMain.on('run-assessment', async () => {
     await assessment.runAssessmentTool();
-    await notifyAssessmentData();
+    await notifyScore();
 });
 
-ipcMain.on('app-minimize', async (event) => {
-    win.minimize();
-});
+ipcMain.on('app-minimize', () => win.minimize());
+ipcMain.on('app-close', () => win.close());
 
-ipcMain.on('app-maximize', async (event) => {
+ipcMain.on('app-maximize', () => {
     if (win.resizable) {
         win.maximize();
     }
 });
 
-ipcMain.on('app-close', async (event) => {
-    win.close();
-});
-
-ipcMain.on('open-github', async (event) => {
-    shell.openExternal('https://github.com/thinog');
-});
+ipcMain.on('open-github', () => shell.openExternal('https://github.com/thinog'));

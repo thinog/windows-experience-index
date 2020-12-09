@@ -111,9 +111,14 @@ img {
     transition: background 0.5s;
 }
 
-.title-bar .action-buttons div img {
+.title-bar .action-buttons img {
     height: 15px;
     width: 15px;
+    filter: invert(30%);
+}
+
+.dark .title-bar .action-buttons img {
+    filter: invert(70%);
 }
 
 .app-headers {
