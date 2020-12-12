@@ -3,10 +3,15 @@ const fs = require('fs');
 
 async function runAssessmentTool() {
     return new Promise(async (resolve, reject) => {
+        // const winsat = spawn(
+        //     'run-as-admin.bat',
+        //     ['WinSAT', 'mem'],
+        //     { shell: 'powershell.exe', windowsHide: false });
+
         const winsat = spawn(
             'Start-Process',
             ['WinSAT', '-ArgumentList', '"mem"', '-Verb', 'RunAs', '-Wait'],
-            { shell: 'powershell.exe', windowsHide: true });
+            { shell: 'powershell.exe', windowsHide: false });
 
         winsat.stderr.on('data', (data) => reject(data));
 

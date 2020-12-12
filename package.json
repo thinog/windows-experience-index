@@ -1,33 +1,54 @@
 {
-  "name": "windows-experience-index",
-  "version": "0.1.0",
-  "description": "Windows Experience Index",
-  "main": "src/main.js",
-  "type": "commonjs",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/thinog/windows-experience-index.git"
-  },
-  "keywords": [
-    "electronjs",
-    "nodejs",
-    "windows",
-    "desktop-application"
-  ],
-  "author": "Thiago Martins",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/thinog/windows-experience-index/issues"
-  },
-  "homepage": "https://github.com/thinog/windows-experience-index#readme",
-  "devDependencies": {
-    "electron": "^11.0.3"
-  },
-  "dependencies": {}
+    "name": "windows-experience-index",
+    "version": "0.1.0",
+    "description": "Windows Experience Index",
+    "main": "src/main.js",
+    "type": "commonjs",
+    "scripts": {
+        "start": "npx electron .",
+        "pack": "npx electron-builder --dir",
+        "dist-win64": "npx electron-builder --win --x64",
+        "dist-win32": "npx electron-builder --win --ia32",
+        "publish-win64": "npx electron-builder -p \"always\" --win --x64",
+        "publish-win32": "npx electron-builder -p \"always\" --win --ia32"
+    },
+    "build": {
+        "productName": "Windows Experience Service",
+        "appId": "thinog.windowsExperienceIndex",
+        "compression": "maximum",
+        "win": {
+            "icon": "src/assets/img/icon-256.png",
+            "target": [
+                "portable"
+            ],
+            "publish": [{
+                "provider": "github",
+                "owner": "thinog"
+            }]
+        },
+        "portable": {
+            "artifactName": "windows_experience_index_${arch}.exe"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/thinog/windows-experience-index.git"
+    },
+    "keywords": [
+        "electronjs",
+        "nodejs",
+        "windows",
+        "desktop-application"
+    ],
+    "author": "Thiago Martins",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/thinog/windows-experience-index/issues"
+    },
+    "homepage": "https://github.com/thinog/windows-experience-index#readme",
+    "devDependencies": {
+        "electron": "^11.1.0",
+        "electron-builder": "^22.9.1"
+    },
+    "dependencies": {}
 }
