@@ -1,22 +1,24 @@
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const fs = require('fs');
+
+const winsatDir = 'c:\\windows\\performance\\winsat\\datastore';
 
 async function runAssessmentTool() {
     return new Promise(async (resolve, reject) => {
-        // const winsat = spawn(
-        //     'run-as-admin.bat',
-        //     ['WinSAT', 'mem'],
-        //     { shell: 'powershell.exe', windowsHide: false });
-
         const winsat = spawn(
-            'Start-Process',
-            ['WinSAT', '-ArgumentList', '"mem"', '-Verb', 'RunAs', '-Wait'],
-            { shell: 'powershell.exe', windowsHide: false });
+            'powershell',
+            ['-command', '"(start-process WinSAT formal -Verb RunAs -noexit -Wait)"']);
 
-        winsat.stderr.on('data', (data) => reject(data));
+        winsat.stderr.on('data', (data) => reject(data.toString()));
 
-        winsat.on('close', async (code) => {
-            return resolve(code);
+        winsat.on('close', () => { 
+            const watch = fs.watch(winsatDir);
+            watch.once('change', (event, file) => {
+                console.log(event)
+                console.log(file)
+                watch.close()
+                resolve()
+            });
         });
     });
 }
@@ -71,13 +73,11 @@ async function mapWinsatToExperienceIndex(winsatOutput) {
 
 async function getAssessmentDate() {
     return new Promise((resolve, reject) => {
-        var dir = 'c:\\windows\\performance\\winsat\\datastore';
-
-        fs.readdir(dir, function (err, files) {
+        fs.readdir(winsatDir, function (err, files) {
             if (err) reject(err);
 
             files = files.map(fileName => {
-                file = fs.statSync(dir + '\\' + fileName);
+                file = fs.statSync(winsatDir + '\\' + fileName);
 
                 return {
                     name: fileName,

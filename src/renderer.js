@@ -58,7 +58,7 @@ function fillAssessmentDate(date) {
 
 function translate(language, args) {
     const elements = document.querySelectorAll('[data-translation-key]');
-
+    
     const translation = require(`${__dirname}/translations/${language}.js`).translations;
 
     elements.forEach(element => {

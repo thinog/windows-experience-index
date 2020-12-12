@@ -7,27 +7,32 @@
     "scripts": {
         "start": "npx electron .",
         "pack": "npx electron-builder --dir",
-        "dist-win64": "npx electron-builder --win --x64",
-        "dist-win32": "npx electron-builder --win --ia32",
-        "publish-win64": "npx electron-builder -p \"always\" --win --x64",
-        "publish-win32": "npx electron-builder -p \"always\" --win --ia32"
+        "dist": "npx electron-builder",
+        "publish": "npx electron-builder -p \"always\""
     },
     "build": {
         "productName": "Windows Experience Service",
         "appId": "thinog.windowsExperienceIndex",
-        "compression": "maximum",
+        "compression": "store",
         "win": {
             "icon": "src/assets/img/icon-256.png",
+            "artifactName": "WindowsExperienceIndex_${version}_${os}_${arch}.exe",
             "target": [
                 "portable"
             ],
-            "publish": [{
-                "provider": "github",
-                "owner": "thinog"
-            }]
+            "publish": [
+                {
+                    "provider": "github",
+                    "owner": "thinog"
+                }
+            ]
         },
-        "portable": {
-            "artifactName": "windows_experience_index_${arch}.exe"
+        "files": [
+            "src/"
+        ],
+        "directories": {
+            "output": "dist/${os}-${arch}",
+            "buildResources": "dist/build-resources"
         }
     },
     "repository": {
@@ -48,7 +53,8 @@
     "homepage": "https://github.com/thinog/windows-experience-index#readme",
     "devDependencies": {
         "electron": "^11.1.0",
-        "electron-builder": "^22.9.1"
+        "electron-builder": "^22.9.1",
+        "electron-packager": "^15.2.0"
     },
     "dependencies": {}
 }

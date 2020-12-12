@@ -1,5 +1,6 @@
 const { app, ipcMain, BrowserWindow, shell } = require('electron');
 const { spawn } = require('child_process');
+const fs = require('fs')
 const assessment = require('./assessment');
 
 let win;
@@ -23,19 +24,19 @@ async function createWindow() {
     await loadTranslationArgs();
 }
 
-async function loadTranslationArgs(){
+async function loadTranslationArgs() {
     const limits = await assessment.getScoreLimits();
 
     Object.keys(limits).forEach(objKey => {
-        limits[objKey] = limits[objKey].toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale, { 
-            minimumFractionDigits: 1, 
-            maximumFractionDigits: 1 
+        limits[objKey] = limits[objKey].toLocaleString(Intl.DateTimeFormat().resolvedOptions().locale, {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
         });
     });
-    
+
     const args = {
         'mainDescription': limits
-    };    
+    };
 
     win.webContents.send('translation-args', args);
 }
@@ -45,22 +46,9 @@ async function notifyScore() {
     win.webContents.send('assessment-date', await assessment.getAssessmentDate());
 }
 
-async function getSystemLocale() {
-    return new Promise((resolve, reject) => {
-        let output = "";
-        const wei = spawn(
-            '(Get-UICulture | ForEach-Object -MemberName Name)',
-            [],
-            { shell: 'powershell.exe', windowsHide: true });
-
-        wei.stderr.on('data', (data) => reject(data));
-
-        wei.stdout.on('data', (data) => output += data.toString());
-
-        wei.on('close', async (code) => {
-            resolve(output);
-        });
-    });
+function log(message) {
+    fs.writeFileSync('./debug.log', JSON.stringify(message) + '\n');
+    console.log(message)
 }
 
 app.whenReady()
