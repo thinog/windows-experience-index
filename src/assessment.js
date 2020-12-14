@@ -1,25 +1,45 @@
-const { spawn, exec } = require('child_process');
+const { spawn, execFile } = require('child_process');
 const fs = require('fs');
-
 const winsatDir = 'c:\\windows\\performance\\winsat\\datastore';
+
+function getElevateToolPath() {
+    // http://code.kliu.org/misc/elevate/
+
+    if (process.arch === 'x64') {
+        return `${__dirname}\\bin\\elevate\\bin.x86-64\\elevate.exe`;
+    }
+
+    return `${__dirname}\\bin\\elevate\\bin.x86-32\\elevate.exe`;
+}
 
 async function runAssessmentTool() {
     return new Promise(async (resolve, reject) => {
-        const winsat = spawn(
-            'powershell',
-            ['-command', '"(start-process WinSAT formal -Verb RunAs -noexit -Wait)"']);
+        const elevatePath = getElevateToolPath();
 
-        winsat.stderr.on('data', (data) => reject(data.toString()));
+        execFile(elevatePath, ['-w', '-c', 'WinSAT', 'memformal'], { windowsHide: true }, (error, stdout, stderror) => {
+            if (error) {
+                console.error('Failed!', error);
+                reject(error);
+            }
 
-        winsat.on('close', () => { 
-            const watch = fs.watch(winsatDir);
-            watch.once('change', (event, file) => {
-                console.log(event)
-                console.log(file)
-                watch.close()
-                resolve()
-            });
+            if (stderror) {
+                console.error('Failed!', stderror);
+                reject(stderror);
+            }
+
+            console.log(stdout);
+            resolve(stdout)
         });
+
+        // const winsat = spawn(
+        //     `${__dirname}/bin/elevate.exe`,
+        //     ['WinSAT', 'formal', '-restart']);
+
+        // winsat.stderr.on('data', (data) => reject(data.toString()));
+
+        // winsat.on('close', (code) => { 
+        //     resolve(code);
+        // });
     });
 }
 

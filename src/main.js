@@ -64,7 +64,7 @@ app.on('activate', () => {
 });
 
 ipcMain.on('run-assessment', async () => {
-    await assessment.runAssessmentTool();
+    await assessment.runAssessmentTool().catch((e) => console.error(e));
     await notifyScore();
 });
 
