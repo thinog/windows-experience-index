@@ -5,6 +5,11 @@ Aplicação desenvolvida em Node.js e Electron, feita para substituir o Windows 
 
 ## Comandos locais
 
+### Testar a aplicação
+```bash
+npm test
+```
+
 ### Executar localmente
 ```bash
 npm start
