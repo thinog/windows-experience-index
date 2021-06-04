@@ -53,7 +53,7 @@
     "homepage": "https://github.com/thinog/windows-experience-index#readme",
     "devDependencies": {
         "electron": "^11.1.0",
-        "electron-builder": "^22.9.1",
+        "electron-builder": "^22.11.5",
         "electron-packager": "^15.2.0"
     },
     "dependencies": {
